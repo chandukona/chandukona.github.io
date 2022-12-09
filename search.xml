@@ -155,11 +155,11 @@
       
         <tags>
             
-            <tag> crypto </tag>
-            
             <tag> writeup </tag>
             
             <tag> dlp </tag>
+            
+            <tag> crypto </tag>
             
             <tag> EllipticCurve </tag>
             
@@ -188,13 +188,13 @@
       
         <tags>
             
-            <tag> crypto </tag>
-            
             <tag> writeup </tag>
             
             <tag> polynomial </tag>
             
             <tag> dlp </tag>
+            
+            <tag> crypto </tag>
             
         </tags>
       
@@ -219,11 +219,11 @@
       
         <tags>
             
-            <tag> crypto </tag>
-            
             <tag> writeup </tag>
             
             <tag> polynomial </tag>
+            
+            <tag> crypto </tag>
             
             <tag> RSA </tag>
             
@@ -250,9 +250,9 @@
       
         <tags>
             
-            <tag> crypto </tag>
-            
             <tag> writeup </tag>
+            
+            <tag> crypto </tag>
             
             <tag> EllipticCurve </tag>
             
@@ -281,9 +281,9 @@
       
         <tags>
             
-            <tag> crypto </tag>
-            
             <tag> writeup </tag>
+            
+            <tag> crypto </tag>
             
             <tag> sbox </tag>
             
