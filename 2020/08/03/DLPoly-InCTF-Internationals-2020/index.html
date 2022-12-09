@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="TL;DR  Change the Field of g and h to prime modulus from composite modulus. Solve the DLP using pohlig-hellman attack. Wrap it with flag format.  ChallengeD L PolyChallenge Points: 676 DescriptionRSA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DLPoly - InCTF Internationals 2020">
+<meta property="og:url" content="http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/index.html">
+<meta property="og:site_name" content="chandu kona">
+<meta property="og:description" content="TL;DR  Change the Field of g and h to prime modulus from composite modulus. Solve the DLP using pohlig-hellman attack. Wrap it with flag format.  ChallengeD L PolyChallenge Points: 676 DescriptionRSA">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-02T23:43:55.000Z">
+<meta property="article:modified_time" content="2022-12-09T01:29:44.652Z">
+<meta property="article:author" content="Chandu Kona">
+<meta property="article:tag" content="crypto">
+<meta property="article:tag" content="writeup">
+<meta property="article:tag" content="polynomial">
+<meta property="article:tag" content="dlp">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>DLPoly - InCTF Internationals 2020</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/08/03/polyRSA-InCTF-Internationals-2020/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&text=DLPoly - InCTF Internationals 2020"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&title=DLPoly - InCTF Internationals 2020"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&is_video=false&description=DLPoly - InCTF Internationals 2020"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DLPoly - InCTF Internationals 2020&body=Check out this article: http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&title=DLPoly - InCTF Internationals 2020"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&title=DLPoly - InCTF Internationals 2020"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&title=DLPoly - InCTF Internationals 2020"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&title=DLPoly - InCTF Internationals 2020"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&name=DLPoly - InCTF Internationals 2020&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&t=DLPoly - InCTF Internationals 2020"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Challenge"><span class="toc-number">1.</span> <span class="toc-text">Challenge</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#D-L-Poly"><span class="toc-number">1.0.1.</span> <span class="toc-text">D L Poly</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Description"><span class="toc-number">2.</span> <span class="toc-text">Description</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Challenge-Author-pyr0"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">Challenge Author: pyr0</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Attachment"><span class="toc-number">2.0.0.2.</span> <span class="toc-text">Attachment</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#given-file"><span class="toc-number">2.1.</span> <span class="toc-text">given file</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Factoring"><span class="toc-number">2.2.</span> <span class="toc-text">Factoring</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pohlighellman"><span class="toc-number">3.</span> <span class="toc-text">pohlighellman</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#solution"><span class="toc-number">3.1.</span> <span class="toc-text">solution</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">4.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        DLPoly - InCTF Internationals 2020
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Chandu Kona</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-08-02T23:43:55.000Z" itemprop="datePublished">2020-08-03</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Crypto/">Crypto</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/crypto/" rel="tag">crypto</a>, <a class="tag-link-link" href="/tags/dlp/" rel="tag">dlp</a>, <a class="tag-link-link" href="/tags/polynomial/" rel="tag">polynomial</a>, <a class="tag-link-link" href="/tags/writeup/" rel="tag">writeup</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><strong>TL;DR</strong></p>
+<ol>
+<li>Change the Field of g and h to prime modulus from composite modulus.</li>
+<li>Solve the DLP using pohlig-hellman attack.</li>
+<li>Wrap it with flag format.</li>
+</ol>
+<h1 id="Challenge"><a href="#Challenge" class="headerlink" title="Challenge"></a>Challenge</h1><h3 id="D-L-Poly"><a href="#D-L-Poly" class="headerlink" title="D L Poly"></a>D L Poly</h3><p><strong>Challenge Points</strong>: 676</p>
+<h1 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h1><p>RSA is easy. DLP is hard. Challenge files: out.txt.</p>
+<h4 id="Challenge-Author-pyr0"><a href="#Challenge-Author-pyr0" class="headerlink" title="Challenge Author: pyr0"></a>Challenge Author: <a target="_blank" rel="noopener" href="https://twitter.com/chandu_kona">pyr0</a></h4><h4 id="Attachment"><a href="#Attachment" class="headerlink" title="Attachment"></a>Attachment</h4><p><code>- out.txt</code></p>
+<h2 id="given-file"><a href="#given-file" class="headerlink" title="given file"></a>given file</h2><p>By looking at this we can say that the challenge is about polynomial dlp as mentioned in the name <code>D L Poly</code>.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sage: p</span><br><span class="line"><span class="number">35201</span></span><br><span class="line">sage: <span class="built_in">len</span>(flag)</span><br><span class="line"><span class="number">14</span></span><br><span class="line">sage: X = <span class="built_in">int</span>.from_bytes(  flag.strip(<span class="string">b&#x27;inctf&#123;&#x27;</span>).strip(<span class="string">b&#x27;&#125;&#x27;</span>) ,  <span class="string">&#x27;big&#x27;</span>)</span><br><span class="line">sage: n</span><br><span class="line"><span class="number">1629</span>*x^<span class="number">256</span> + <span class="number">25086</span>*x^<span class="number">255</span> + <span class="number">32366</span>*x^<span class="number">254</span>  + ... + <span class="number">16286</span>*x + <span class="number">12050</span></span><br><span class="line">sage: g</span><br><span class="line">x</span><br><span class="line">sage: g^X</span><br><span class="line"><span class="number">10254</span>*x^<span class="number">255</span> + <span class="number">11436</span>*x^<span class="number">254</span> + <span class="number">9453</span>*x^<span class="number">253</span> + ... + <span class="number">549</span>*x + <span class="number">1468</span></span><br></pre></td></tr></table></figure>
+
+<p>We know the upper bound of X is <code>256^7</code>.</p>
+<h2 id="Factoring"><a href="#Factoring" class="headerlink" title="Factoring"></a>Factoring</h2><p>If we see the <code>n</code> we can notice that it’s not a prime polynomial it has a lot of factors.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">sage: P.&lt;x&gt; = PolynomialRing(GF(p))</span><br><span class="line">....: n = P(n)</span><br><span class="line">....: <span class="built_in">list</span>(n.factor())</span><br><span class="line">....:</span><br><span class="line">[(x^<span class="number">6</span> + <span class="number">6522</span>*x^<span class="number">5</span> + <span class="number">30239</span>*x^<span class="number">4</span>   + ... + <span class="number">8797</span>*x + <span class="number">1288</span>, <span class="number">1</span>),</span><br><span class="line">(x^<span class="number">10</span> + <span class="number">892</span>*x^<span class="number">9</span> + <span class="number">21744</span>*x^<span class="number">8</span>   + ... <span class="number">7980</span>*x + <span class="number">25558</span>,<span class="number">1</span>),</span><br><span class="line">(x^<span class="number">10</span> + <span class="number">3448</span>*x^<span class="number">9</span> + <span class="number">17391</span>*x^<span class="number">8</span>  + ... <span class="number">29448</span>*x + <span class="number">5415</span>,<span class="number">1</span>),</span><br><span class="line">(x^<span class="number">10</span> + <span class="number">4097</span>*x^<span class="number">9</span> + <span class="number">21262</span>*x^<span class="number">8</span>  + ... <span class="number">1018</span>*x + <span class="number">7369</span>,<span class="number">1</span>),</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">(x^<span class="number">10</span> + <span class="number">25254</span>*x^<span class="number">9</span> + <span class="number">1035</span>*x^<span class="number">8</span>  +  ... <span class="number">20868</span>*x + <span class="number">13941</span>,<span class="number">1</span>),</span><br><span class="line">(x^<span class="number">10</span> + <span class="number">26554</span>*x^<span class="number">9</span> + <span class="number">33072</span>*x^<span class="number">8</span> + ... <span class="number">34044</span>*x + <span class="number">34664</span>,<span class="number">1</span>),</span><br><span class="line">(x^<span class="number">10</span> + <span class="number">34596</span>*x^<span class="number">9</span> + <span class="number">19833</span>*x^<span class="number">8</span> + ... <span class="number">28425</span>*x + <span class="number">25916</span>,<span class="number">1</span>),</span><br><span class="line">(x^<span class="number">10</span> + <span class="number">35044</span>*x^<span class="number">9</span> + <span class="number">26290</span>*x^<span class="number">8</span> + ... <span class="number">32131</span>*x + <span class="number">4231</span>,<span class="number">1</span>)]</span><br></pre></td></tr></table></figure>
+
+<p>So we can change the modulus to any of these factors of n but if we notice phi for the polynomials having degree 10 it is factorable and thus we can do a pohlig-hellman attack to recover X.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">phi = p^<span class="number">10</span>-<span class="number">1</span></span><br><span class="line">P.&lt;x&gt; = PolynomialRing(GF(p))</span><br><span class="line">n = P(n)</span><br><span class="line">q = n.factor()[<span class="number">1</span>][<span class="number">0</span>]</span><br><span class="line">R.&lt;x&gt; = P.quotient(q)</span><br><span class="line">g = R(g)</span><br><span class="line">h = R(h)`</span><br></pre></td></tr></table></figure>
+
+<p>Now the ring of g and h is an irreducible polynomial and we can perform a pohlig-hellman attack.</p>
+<h1 id="pohlighellman"><a href="#pohlighellman" class="headerlink" title="pohlighellman"></a>pohlighellman</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">pohlighellman</span>(<span class="params">g,y,p,phi</span>):</span><br><span class="line"></span><br><span class="line">    factors = ecm.factor(phi)</span><br><span class="line"><span class="comment">#ignoring the smallest factors    </span></span><br><span class="line">    factors = &#123; i : factors.count(i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">sorted</span>(<span class="built_in">list</span>(<span class="built_in">set</span>(factors)))[<span class="number">2</span>:]&#125;</span><br><span class="line"></span><br><span class="line">    a,n = [],[]</span><br><span class="line">    <span class="keyword">for</span> q,e <span class="keyword">in</span> factors.items():</span><br><span class="line">        x = <span class="number">0</span></span><br><span class="line">        G = g^(phi//q)</span><br><span class="line">        Y = y</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(e):</span><br><span class="line">            h = Y^(phi//q**(i+<span class="number">1</span>))</span><br><span class="line">            X = discrete_log(h,G,<span class="built_in">ord</span> = phi)</span><br><span class="line">            <span class="keyword">assert</span> X != <span class="literal">None</span>, <span class="string">f&#x27;Got None for brute<span class="subst">&#123;G,h,p&#125;</span>&#x27;</span></span><br><span class="line">            x += q^i*X</span><br><span class="line">            Y = Y * g^-X</span><br><span class="line"></span><br><span class="line">        a.append(x)</span><br><span class="line">        n.append(q^e)</span><br><span class="line"></span><br><span class="line">    x = crt(a,n)</span><br><span class="line">    <span class="keyword">assert</span> g^x == y</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+
+<h2 id="solution"><a href="#solution" class="headerlink" title="solution"></a>solution</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#given:</span></span><br><span class="line">load(<span class="string">&#x27;given.sage&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#pohlig-hellman:</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pohlighellman</span>(<span class="params">g,y,p,phi</span>):</span><br><span class="line"></span><br><span class="line">    factors = ecm.factor(phi)</span><br><span class="line"><span class="comment">#ignoring the smallest factors</span></span><br><span class="line">    factors = &#123; i : factors.count(i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">sorted</span>(<span class="built_in">list</span>(<span class="built_in">set</span>(factors)))[<span class="number">2</span>:]&#125;</span><br><span class="line"></span><br><span class="line">    a,n = [],[]</span><br><span class="line">    <span class="keyword">for</span> q,e <span class="keyword">in</span> factors.items():</span><br><span class="line">        x = <span class="number">0</span></span><br><span class="line">        G = g^(phi//q)</span><br><span class="line">        Y = y</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(e):</span><br><span class="line">            h = Y^(phi//q**(i+<span class="number">1</span>))</span><br><span class="line">            X = discrete_log(h,G,<span class="built_in">ord</span> = phi)</span><br><span class="line">            <span class="keyword">assert</span> X != <span class="literal">None</span>, <span class="string">f&#x27;Got None for brute<span class="subst">&#123;G,h,p&#125;</span>&#x27;</span></span><br><span class="line">            x += q^i*X</span><br><span class="line">            Y = Y * g^-X</span><br><span class="line"></span><br><span class="line">        a.append(x)</span><br><span class="line">        n.append(q^e)</span><br><span class="line"></span><br><span class="line">    x = crt(a,n)</span><br><span class="line">    <span class="keyword">assert</span> g^x == y</span><br><span class="line">    <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#make the modulus as prime:</span></span><br><span class="line">phi = p^<span class="number">10</span>-<span class="number">1</span></span><br><span class="line">P.&lt;x&gt; = PolynomialRing(GF(p))</span><br><span class="line">n = P(n)</span><br><span class="line">q = n.factor()[<span class="number">1</span>][<span class="number">0</span>]</span><br><span class="line">R.&lt;x&gt; = P.quotient(q)</span><br><span class="line">g = R(g)</span><br><span class="line">h = R(h)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#finding flag:</span></span><br><span class="line">X = pohlighellman(g,h,p,phi)</span><br><span class="line">flag = <span class="string">b&#x27;inctf&#123;&#x27;</span>+<span class="built_in">int</span>.to_bytes(<span class="built_in">int</span>(X),<span class="number">6</span>,<span class="string">&#x27;big&#x27;</span>)+<span class="string">b&#x27;&#125;&#x27;</span></span><br><span class="line"><span class="keyword">assert</span> flag == <span class="string">b&#x27;inctf&#123;bingo!&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>Polynomials are easy to break even they have a large order than integer order.</p>
+<p>Hope you enjoyed the challenge!</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Challenge"><span class="toc-number">1.</span> <span class="toc-text">Challenge</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#D-L-Poly"><span class="toc-number">1.0.1.</span> <span class="toc-text">D L Poly</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Description"><span class="toc-number">2.</span> <span class="toc-text">Description</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Challenge-Author-pyr0"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">Challenge Author: pyr0</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Attachment"><span class="toc-number">2.0.0.2.</span> <span class="toc-text">Attachment</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#given-file"><span class="toc-number">2.1.</span> <span class="toc-text">given file</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Factoring"><span class="toc-number">2.2.</span> <span class="toc-text">Factoring</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pohlighellman"><span class="toc-number">3.</span> <span class="toc-text">pohlighellman</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#solution"><span class="toc-number">3.1.</span> <span class="toc-text">solution</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">4.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&text=DLPoly - InCTF Internationals 2020"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&title=DLPoly - InCTF Internationals 2020"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&is_video=false&description=DLPoly - InCTF Internationals 2020"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DLPoly - InCTF Internationals 2020&body=Check out this article: http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&title=DLPoly - InCTF Internationals 2020"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&title=DLPoly - InCTF Internationals 2020"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&title=DLPoly - InCTF Internationals 2020"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&title=DLPoly - InCTF Internationals 2020"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&name=DLPoly - InCTF Internationals 2020&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/08/03/DLPoly-InCTF-Internationals-2020/&t=DLPoly - InCTF Internationals 2020"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    Chandu Kona
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4V3049N925"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4V3049N925');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

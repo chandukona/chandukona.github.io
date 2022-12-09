@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="tl;dr  Get fake_flag by using Consensus Attack. Get xored_flag by forging individual signatures. Xor them both to get the flag.  Challenge point: 925 No. of solves: 14 Challenge Author: Chandu-Kona Ch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Trouble With Pairs - InCTF Internationals 2021">
+<meta property="og:url" content="http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/index.html">
+<meta property="og:site_name" content="chandu kona">
+<meta property="og:description" content="tl;dr  Get fake_flag by using Consensus Attack. Get xored_flag by forging individual signatures. Xor them both to get the flag.  Challenge point: 925 No. of solves: 14 Challenge Author: Chandu-Kona Ch">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-08-16T14:31:38.000Z">
+<meta property="article:modified_time" content="2022-12-09T01:29:22.187Z">
+<meta property="article:author" content="Chandu Kona">
+<meta property="article:tag" content="crypto">
+<meta property="article:tag" content="writeup">
+<meta property="article:tag" content="dlp">
+<meta property="article:tag" content="EllipticCurve">
+<meta property="article:tag" content="BLS">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Trouble With Pairs - InCTF Internationals 2021</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/11/13/0-9-Ethernaut-CTF/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/08/03/DLPoly-InCTF-Internationals-2020/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&text=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&title=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&is_video=false&description=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Trouble With Pairs - InCTF Internationals 2021&body=Check out this article: http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&title=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&title=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&title=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&title=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&name=Trouble With Pairs - InCTF Internationals 2021&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&t=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge-Description"><span class="toc-number">1.</span> <span class="toc-text">Challenge Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Handout"><span class="toc-number">2.</span> <span class="toc-text">Handout</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BLS-py"><span class="toc-number">2.1.</span> <span class="toc-text">BLS.py</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#signer-py"><span class="toc-number">2.2.</span> <span class="toc-text">signer.py</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#server-py"><span class="toc-number">2.3.</span> <span class="toc-text">server.py</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Observation"><span class="toc-number">3.</span> <span class="toc-text">Observation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BLS"><span class="toc-number">3.1.</span> <span class="toc-text">BLS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BLS-Signature-Aggregation"><span class="toc-number">3.2.</span> <span class="toc-text">BLS Signature Aggregation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Consensus-Attacks"><span class="toc-number">3.3.</span> <span class="toc-text">Consensus Attacks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploit-Idea"><span class="toc-number">4.</span> <span class="toc-text">Exploit Idea</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recovering-Fake-Flag"><span class="toc-number">4.1.</span> <span class="toc-text">Recovering Fake Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#In-detailed"><span class="toc-number">4.1.1.</span> <span class="toc-text">In detailed</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Recovering-Flag"><span class="toc-number">4.2.</span> <span class="toc-text">Recovering Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#In-detailed-1"><span class="toc-number">4.2.1.</span> <span class="toc-text">In detailed</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploit"><span class="toc-number">5.</span> <span class="toc-text">Exploit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flag"><span class="toc-number">6.</span> <span class="toc-text">Flag</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Trouble With Pairs - InCTF Internationals 2021
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Chandu Kona</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-08-16T14:31:38.000Z" itemprop="datePublished">2021-08-16</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Crypto/">Crypto</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/BLS/" rel="tag">BLS</a>, <a class="tag-link-link" href="/tags/EllipticCurve/" rel="tag">EllipticCurve</a>, <a class="tag-link-link" href="/tags/crypto/" rel="tag">crypto</a>, <a class="tag-link-link" href="/tags/dlp/" rel="tag">dlp</a>, <a class="tag-link-link" href="/tags/writeup/" rel="tag">writeup</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>tl;dr</p>
+<ul>
+<li>Get <strong>fake_flag</strong> by using Consensus Attack.</li>
+<li>Get <strong>xored_flag</strong> by forging individual signatures.</li>
+<li>Xor them both to get the <strong>flag</strong>.</li>
+</ul>
+<p><strong>Challenge point</strong>: 925</p>
+<p><strong>No. of solves</strong>: 14</p>
+<p><strong>Challenge Author</strong>: <a target="_blank" rel="noopener" href="https://twitter.com/chandu_kona?lang=en">Chandu-Kona</a></p>
+<h2 id="Challenge-Description"><a href="#Challenge-Description" class="headerlink" title="Challenge Description"></a><strong>Challenge Description</strong></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">We are testing a new Optimised Signature scheme for Authentication in our Voting System.</span><br><span class="line">This might lead us to reduce the time taken for Election Process.</span><br></pre></td></tr></table></figure>
+
+<h2 id="Handout"><a href="#Handout" class="headerlink" title="Handout"></a><strong>Handout</strong></h2><pre><code>-    BLS.py
+-    signer.py
+-    server.py
+</code></pre>
+<h3 id="BLS-py"><a href="#BLS-py" class="headerlink" title="BLS.py"></a>BLS.py</h3><ul>
+<li><code>BLS.py</code> is same file as <code>ciphersuites.py</code> from <a target="_blank" rel="noopener" href="https://github.com/ethereum/py_ecc/tree/master/py_ecc/bls">py_ecc</a> module with a function overriden.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># from py_ecc.bls.hash_to_curve import hash_to_G2</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">hash_to_G2</span>(<span class="params">msg, DST, <span class="built_in">hash</span></span>):</span><br><span class="line">    m = <span class="built_in">int</span>(<span class="built_in">hash</span>(msg).hexdigest(),<span class="number">16</span>)</span><br><span class="line">    <span class="keyword">return</span>  multiply(G2,m)</span><br></pre></td></tr></table></figure>
+
+<h3 id="signer-py"><a href="#signer-py" class="headerlink" title="signer.py"></a>signer.py</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> BLS <span class="keyword">import</span> G2ProofOfPossession <span class="keyword">as</span> bls</span><br><span class="line"><span class="keyword">from</span> secret <span class="keyword">import</span> data</span><br><span class="line"></span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> data:</span><br><span class="line">    d = &#123;&#125;</span><br><span class="line">    d[<span class="string">&#x27;Name&#x27;</span>] = i[<span class="string">&#x27;Name&#x27;</span>]</span><br><span class="line">    d[<span class="string">&#x27;Vote&#x27;</span>] = i[<span class="string">&#x27;Vote&#x27;</span>]</span><br><span class="line">    d[<span class="string">&#x27;Count&#x27;</span>] = i[<span class="string">&#x27;Count&#x27;</span>]</span><br><span class="line">    d[<span class="string">&#x27;PK&#x27;</span>] = i[<span class="string">&#x27;PK&#x27;</span>].<span class="built_in">hex</span>()</span><br><span class="line">    d[<span class="string">&#x27;Sign&#x27;</span>] = bls.Sign(i[<span class="string">&#x27;PrivKey&#x27;</span>],i[<span class="string">&#x27;Vote&#x27;</span>].encode()).<span class="built_in">hex</span>()</span><br><span class="line">    result.append(d)</span><br><span class="line"></span><br><span class="line"><span class="comment"># print(result)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">[&#123;&#x27;Name&#x27;: &#x27;Nebraska&#x27;,</span></span><br><span class="line"><span class="string">  &#x27;Vote&#x27;: &#x27;R&#x27;,</span></span><br><span class="line"><span class="string">  &#x27;Count&#x27;: 5,</span></span><br><span class="line"><span class="string">  &#x27;PK&#x27;: &#x27;aa6fc9c17a1b2de916e5d5453444655e9f6dd3d456b96239f954bc30b80f551c44c1c2423825bc01577e1986098f362b&#x27;,</span></span><br><span class="line"><span class="string">  &#x27;Sign&#x27;: &#x27;a09538da373b317adf63cacb53799417ba57d79486aeec78d7687b37e72625190741313800a7698beb2659b725ca728a074514b4cc1fc300dee2e2ae74516993f6760f0839cc4d712a108c58955e062bf45100966fca0288f39f9bfc8ab25706&#x27;&#125;,</span></span><br><span class="line"><span class="string">  .</span></span><br><span class="line"><span class="string">  .</span></span><br><span class="line"><span class="string">  .</span></span><br><span class="line"><span class="string">  &#123;&#x27;Name&#x27;: &#x27;Michigan&#x27;,</span></span><br><span class="line"><span class="string">  &#x27;Vote&#x27;: &#x27;D&#x27;,</span></span><br><span class="line"><span class="string">  &#x27;Count&#x27;: 16,</span></span><br><span class="line"><span class="string">  &#x27;PK&#x27;: &#x27;ae29e8f4d3c7b814042d04d12930bfc6f78eb12f3b9233a3338fedf42b784b6de6b5d575a0dee6d14de1a5ab9baaf5d9&#x27;,</span></span><br><span class="line"><span class="string">  &#x27;Sign&#x27;: &#x27;a977d66e4fabaaa4d79e4d32f6b0d4e2901278d4e0d31e662af8929ac7ca540c377907b7e315b908f5e643e49b4a4fd914d90bb60305595ab6160cfbe0bbabb5c8a98f8ae37fc6af64faf7dbc35a6b55d7e8c3946dda6135a9332f484b818312&#x27;&#125;]</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="server-py"><a href="#server-py" class="headerlink" title="server.py"></a>server.py</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="keyword">from</span> BLS <span class="keyword">import</span> G2ProofOfPossession <span class="keyword">as</span> bls</span><br><span class="line"><span class="keyword">from</span> secret <span class="keyword">import</span> data, bytexor, fake_flag, flag</span><br><span class="line"><span class="keyword">from</span> json <span class="keyword">import</span> loads</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Unbuffered</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">   <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, stream</span>):</span><br><span class="line">       self.stream = stream</span><br><span class="line"></span><br><span class="line">   <span class="keyword">def</span> <span class="title function_">write</span>(<span class="params">self, data</span>):</span><br><span class="line">       self.stream.write(data)</span><br><span class="line">       self.stream.flush()</span><br><span class="line"></span><br><span class="line">   <span class="keyword">def</span> <span class="title function_">writelines</span>(<span class="params">self, datas</span>):</span><br><span class="line">       self.stream.writelines(datas)</span><br><span class="line">       self.stream.flush()</span><br><span class="line"></span><br><span class="line">   <span class="keyword">def</span> <span class="title function_">__getattr__</span>(<span class="params">self, attr</span>):</span><br><span class="line">       <span class="keyword">return</span> <span class="built_in">getattr</span>(self.stream, attr)</span><br><span class="line"></span><br><span class="line">sys.stdout = Unbuffered(sys.stdout)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">header =    <span class="string">&#x27;&#x27;&#x27;We are testing a new Optimised Signature scheme for Authentication in Voting System.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">               You can send the Published Result in Specified Format</span></span><br><span class="line"><span class="string">               Json Format : &#123;&#x27;Name&#x27; : name, &#x27;Vote&#x27; : vote, &#x27;Sign&#x27; : signature&#125;</span></span><br><span class="line"><span class="string">            &#x27;&#x27;&#x27;</span></span><br><span class="line">invalid_json = <span class="string">&quot;Invalid Json!&quot;</span></span><br><span class="line">invalid_sign = <span class="string">&quot;Invalid signature!&quot;</span></span><br><span class="line">flag = <span class="string">f&quot;Seems like we could never patch this bug, here is your reward : <span class="subst">&#123;bytexor( flag, fake_flag ).<span class="built_in">hex</span>()&#125;</span>&quot;</span></span><br><span class="line">fake_flag = <span class="string">f&quot;but, this one is already known, so here is your fake reward : <span class="subst">&#123;fake_flag.decode()&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Challenge</span>():</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.data = data</span><br><span class="line">        self.Names = [i[<span class="string">&quot;Name&quot;</span>] <span class="keyword">for</span> i <span class="keyword">in</span> self.data]</span><br><span class="line">        self.result = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(data)):  self.result.append(self.Read(<span class="built_in">input</span>(<span class="string">&quot;&gt; &quot;</span>).strip()))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">Read</span>(<span class="params">self, inp</span>):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            data = loads(inp)</span><br><span class="line">            Name = data[<span class="string">&quot;Name&quot;</span>]</span><br><span class="line">            Vote = data[<span class="string">&quot;Vote&quot;</span>]</span><br><span class="line">            Sign = <span class="built_in">bytes</span>.fromhex(data[<span class="string">&quot;Sign&quot;</span>])</span><br><span class="line"></span><br><span class="line">            <span class="keyword">assert</span> Name <span class="keyword">in</span> self.Names <span class="keyword">and</span> Vote <span class="keyword">in</span> [<span class="string">&quot;R&quot;</span>,<span class="string">&quot;D&quot;</span>]</span><br><span class="line"></span><br><span class="line">            self.data[self.Names.index(Name)][<span class="string">&quot;Vote&quot;</span>] = Vote</span><br><span class="line">            self.data[self.Names.index(Name)][<span class="string">&quot;Sign&quot;</span>] = Sign</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="built_in">print</span>(invalid_json)</span><br><span class="line">            sys.exit()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">Verify_aggregate</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> [<span class="string">&quot;D&quot;</span>, <span class="string">&quot;R&quot;</span>]:</span><br><span class="line">                aggregate_sign = bls.Aggregate([i[<span class="string">&quot;Sign&quot;</span>] <span class="keyword">for</span> i <span class="keyword">in</span> self.data <span class="keyword">if</span> i[<span class="string">&quot;Vote&quot;</span>] == j])</span><br><span class="line">                aggregate_Pk = bls._AggregatePKs([i[<span class="string">&quot;PK&quot;</span>] <span class="keyword">for</span> i <span class="keyword">in</span> self.data <span class="keyword">if</span> i[<span class="string">&quot;Vote&quot;</span>] == j])</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> bls.Verify(aggregate_Pk, j.encode(), aggregate_sign):</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="built_in">print</span>(invalid_sign)</span><br><span class="line">            sys.exit()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">Verify_individual</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">all</span> ( bls.Verify(i[<span class="string">&quot;PK&quot;</span>], i[<span class="string">&quot;Vote&quot;</span>].encode(), i[<span class="string">&quot;Sign&quot;</span>]) <span class="keyword">for</span> i <span class="keyword">in</span> self.data)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="built_in">print</span>(invalid_sign)</span><br><span class="line">            sys.exit()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">Get_Majority</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>( [<span class="string">&quot;D&quot;</span>,<span class="string">&quot;R&quot;</span>] , key = <span class="keyword">lambda</span> j : <span class="built_in">sum</span>( [ i[<span class="string">&quot;Count&quot;</span>] <span class="keyword">for</span> i <span class="keyword">in</span> self.data <span class="keyword">if</span> i[<span class="string">&quot;Vote&quot;</span>] == j ] ) )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="built_in">print</span>(header)</span><br><span class="line">    challenge = Challenge()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> challenge.Verify_aggregate():</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> challenge.Get_Majority() == <span class="string">&quot;R&quot;</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;WOW!!!  You found the bug.&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Everything is Verified and Perfect.&quot;</span>)</span><br><span class="line">            sys.exit()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Not Verified!&quot;</span>)</span><br><span class="line">        sys.exit()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> challenge.Verify_individual():</span><br><span class="line">        <span class="built_in">print</span>(flag)</span><br><span class="line">        sys.exit()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(fake_flag)</span><br><span class="line">        sys.exit()</span><br></pre></td></tr></table></figure>
+
+<h2 id="Observation"><a href="#Observation" class="headerlink" title="Observation"></a><strong>Observation</strong></h2><p>If you had noticed the signing had done by using bls signatures,<br>so let’s talk about how BLS works.</p>
+<p>Before we begin, if you are new to ECC pairing, you can refer to this article here: <a target="_blank" rel="noopener" href="https://medium.com/@VitalikButerin/exploring-elliptic-curve-pairings-c73c1864e627">link</a>.</p>
+<h3 id="BLS"><a href="#BLS" class="headerlink" title="BLS"></a>BLS</h3><p>In 2001, Boneh, Lynn, and Shacham (BLS) invented an elegant signature scheme based on pairing. Let’s assume Alice’s private key is x, and her public key is X = x <em>G, H be a function which maps the message to point on the elliptic curve E, The signature is simply S = x</em> H(m) for message m.</p>
+<p>To verify, we check whether e(G,S) is equal to e(X,H(m)),<br>since we know that:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e(G,S) = e(G,x*H(m)) = e(G,H(m))^x = e(x*G,H(m)) = e(X,H(m))</span><br></pre></td></tr></table></figure>
+
+<h3 id="BLS-Signature-Aggregation"><a href="#BLS-Signature-Aggregation" class="headerlink" title="BLS Signature Aggregation"></a>BLS Signature Aggregation</h3><p>The Bls signature has an attractive security property that is used in ETH2. it allows signature aggregation. Let’s assume we have n users, each has Private Key xi, Public key Xi = xi <em>G (same generator for all users). Each user signs its own message mi as Si = xi</em> H(mi). Now, in verification, instead of checking n signatures individually, we want to verify a single aggregate signature.</p>
+<p>To achieve the prious goal,  we compute an aggregate signature S = S1 + S2 + … + Sn.<br>To verify S, we chack whether e(G,S) is equal to e(X1,H(m1)) <em>e(X2,H(m2))</em> … * e(Xn,H(mn)), since we know that:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">e(G,S)  = e(G, S1 + S2 + ... + Sn)</span><br><span class="line">        = e(G, x1 * H(m1)) * e(G, x2 * H(m2)) * ... * e(G, xn * H(mn))</span><br><span class="line">        = e(G,H(m1)) ^ x1 * e(G,H(m2)) ^ x2 * ... * e(G,H(mn)) ^ xn</span><br><span class="line">        = e(X1,H(m1)) * e(X2,H(m2)) * ... * e(Xn,H(mn))</span><br></pre></td></tr></table></figure>
+
+<h3 id="Consensus-Attacks"><a href="#Consensus-Attacks" class="headerlink" title="Consensus Attacks"></a>Consensus Attacks</h3><p>At a high level, the attacker’s goal is to create a set of invalid individual signatures, but their aggregate signature is valid. Therefore, some users will see valid signatures while others see invalid signatures, i.e., the views among users are split.</p>
+<p>Let’s say there are 4 messages and signatures:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">m1 = &quot;message1&quot;, S1</span><br><span class="line">m2 = &quot;message2&quot;, S2</span><br><span class="line">m3 = &quot;message3&quot;, S3</span><br><span class="line">m4 = &quot;message4&quot;, S4</span><br></pre></td></tr></table></figure>
+
+<p>The attacker’s goal is to create malicious signatures so that users see malicious signatures but the aggregate verification is valid. The attacker creates the following:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">S1&#x27; = S1 - 2P</span><br><span class="line">S2&#x27; = S2 + P</span><br><span class="line">S3&#x27; = S3 - P</span><br><span class="line">S4&#x27; = S4 + 2P</span><br></pre></td></tr></table></figure>
+
+<p>where P is a valid point in the subgroup. here if we see the aggregate doesn’t change<br>since:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">S1&#x27; + S2&#x27; + S3&#x27; + S4&#x27; = S1 - 2P + S2 + P + S3 - P + S4 + 2P</span><br><span class="line">                      = S1 + S2 + S3 + S4 + p - P + 2P - 2P</span><br><span class="line">                      = S1 + S2 + S3 + S4</span><br></pre></td></tr></table></figure>
+
+<p>Now we know how BLS works let’s get back to the script server.py,<br>If you noticed the server takes all the votes and first verify the signatures using the aggregate if you’re able to forge successfully then checks the individual signatures for consensus attack, if the server detects any forgery it returns <code>fake_flag</code> else it means you successfully braked the system hance it returns <code>flag</code></p>
+<blockquote>
+<p>Note: we need both <code>flag</code> and <code>fake_flag</code> since the Original flag is XORed with <code>fake_flag</code>.</p>
+</blockquote>
+<h2 id="Exploit-Idea"><a href="#Exploit-Idea" class="headerlink" title="Exploit Idea"></a>Exploit Idea</h2><h3 id="Recovering-Fake-Flag"><a href="#Recovering-Fake-Flag" class="headerlink" title="Recovering Fake Flag"></a>Recovering Fake Flag</h3><p>here, we can make use of <strong>Consensus attack</strong> to recover <strong>fake_flag</strong>, or simply we can swap few signatures to trick the server.</p>
+<h4 id="In-detailed"><a href="#In-detailed" class="headerlink" title="In detailed"></a>In detailed</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">connect</span>(<span class="params">data</span>):</span><br><span class="line">    Host, Port = <span class="string">b&#x27;crypto.challenge.bi0s.in&#x27;</span>, <span class="number">1337</span></span><br><span class="line">    io = remote(Host,Port)</span><br><span class="line">    <span class="comment"># io = process(&#x27;./server.py&#x27;)</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> data:</span><br><span class="line">        j = dumps(&#123;<span class="string">&quot;Name&quot;</span>: i[<span class="string">&quot;Name&quot;</span>], <span class="string">&quot;Vote&quot;</span>: i[<span class="string">&quot;Vote&quot;</span>], <span class="string">&quot;Sign&quot;</span>: i[<span class="string">&quot;Sign&quot;</span>]&#125;)</span><br><span class="line">        io.recvuntil(<span class="string">b&#x27;&gt; &#x27;</span>)</span><br><span class="line">        io.sendline(j)</span><br><span class="line">    <span class="comment"># io.interactive()</span></span><br><span class="line">    io.recvuntil(<span class="string">b&#x27;reward : &#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> io.recvline().strip()</span><br><span class="line"></span><br><span class="line">fake_result = result[:]</span><br><span class="line">w = fake_result[idx+<span class="number">1</span>]</span><br><span class="line">ny = fake_result[idx]</span><br><span class="line">ny[<span class="string">&quot;Sign&quot;</span>] = G2_to_signature( add(signature_to_G2(unhex(ny[<span class="string">&quot;Sign&quot;</span>])), multiply(signature_to_G2(unhex(w[<span class="string">&quot;Sign&quot;</span>])), <span class="number">2</span>)  )).<span class="built_in">hex</span>()</span><br><span class="line">w[<span class="string">&quot;Sign&quot;</span>] = G2_to_signature( neg( signature_to_G2( unhex(w[<span class="string">&quot;Sign&quot;</span>]) ))).<span class="built_in">hex</span>()</span><br><span class="line"><span class="keyword">assert</span> bls.Verify(bls._AggregatePKs([unhex(ny[<span class="string">&quot;PK&quot;</span>]), unhex(w[<span class="string">&quot;PK&quot;</span>])]), <span class="string">b&#x27;R&#x27;</span>, bls.Aggregate([unhex(ny[<span class="string">&quot;Sign&quot;</span>]), unhex(w[<span class="string">&quot;Sign&quot;</span>])]))</span><br><span class="line">fake_result[idx]   = ny</span><br><span class="line">fake_result[idx+<span class="number">1</span>] = w </span><br><span class="line"></span><br><span class="line">fake_flag = connect(fake_result)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>fake_flag = b’bi0s{7h1s_0n3_1s_n07_7h3_r1gh7_fl4g. :)}’</p>
+</blockquote>
+<h3 id="Recovering-Flag"><a href="#Recovering-Flag" class="headerlink" title="Recovering Flag"></a>Recovering Flag</h3><p>here, we can make use of the fualty implementation of <code>Hash_to_G2</code> function in <code>BLS.py</code>, since H(m) = sha256(m)<em>G ; S = x</em> H(m) and we know m, we can take the inverse of sha256(m) and cancell it out and now multiply our desired message hash to forge, or simply we can multiply sha256(desired message) with PublicKey X since X = x *G and sha256(dm)<em>X = x</em>sha256(dm)*G</p>
+<h4 id="In-detailed-1"><a href="#In-detailed-1" class="headerlink" title="In detailed"></a>In detailed</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">bytexor</span>(<span class="params">data,pad</span>):</span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(data) == <span class="built_in">len</span>(pad)</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">bytes</span>(i^j <span class="keyword">for</span> i,j <span class="keyword">in</span> <span class="built_in">zip</span>(data,pad))</span><br><span class="line"></span><br><span class="line">order = <span class="number">52435875175126190479447740508185965837690552500527637822603658699938581184513</span></span><br><span class="line">m1,m2 = [<span class="built_in">int</span>(sha256(i).hexdigest(),<span class="number">16</span>) <span class="keyword">for</span> i <span class="keyword">in</span> [<span class="string">b&quot;D&quot;</span>,<span class="string">b&quot;R&quot;</span>] ]</span><br><span class="line">idx,ny = [(i,j) <span class="keyword">for</span> i,j <span class="keyword">in</span> <span class="built_in">enumerate</span>(result) <span class="keyword">if</span> j[<span class="string">&quot;Name&quot;</span>] == <span class="string">&#x27;New York&#x27;</span> ][<span class="number">0</span>]</span><br><span class="line">ny[<span class="string">&quot;Sign&quot;</span>] = G2_to_signature( multiply( multiply( signature_to_G2( unhex(ny[<span class="string">&quot;Sign&quot;</span>]) ), invert(m1,order)), m2)).<span class="built_in">hex</span>()</span><br><span class="line">ny[<span class="string">&quot;Vote&quot;</span>] = <span class="string">&quot;R&quot;</span></span><br><span class="line"><span class="keyword">assert</span> bls.Verify(unhex(ny[<span class="string">&quot;PK&quot;</span>]) ,ny[<span class="string">&quot;Vote&quot;</span>].encode() ,unhex(ny[<span class="string">&quot;Sign&quot;</span>]) )</span><br><span class="line">result[idx] = ny</span><br><span class="line"></span><br><span class="line">xored_flag = unhex(connect(result).decode())</span><br><span class="line"></span><br><span class="line">flag = bytexor(fake_flag,xored_flag)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Exploit"><a href="#Exploit" class="headerlink" title="Exploit"></a>Exploit</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> hashlib <span class="keyword">import</span> sha256</span><br><span class="line"><span class="keyword">from</span> os <span class="keyword">import</span> remove</span><br><span class="line"><span class="keyword">from</span> BLS <span class="keyword">import</span> G2ProofOfPossession <span class="keyword">as</span> bls</span><br><span class="line"><span class="keyword">from</span> py_ecc.bls.g2_primitives <span class="keyword">import</span> G2_to_signature, signature_to_G2</span><br><span class="line"><span class="keyword">from</span> py_ecc.optimized_bls12_381 <span class="keyword">import</span> add, multiply, neg</span><br><span class="line"><span class="keyword">from</span> gmpy2 <span class="keyword">import</span> invert</span><br><span class="line"><span class="keyword">from</span> json <span class="keyword">import</span> dumps</span><br><span class="line"><span class="keyword">from</span> signer <span class="keyword">import</span> result</span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">unhex = <span class="keyword">lambda</span> i : <span class="built_in">bytes</span>.fromhex(i)</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bytexor</span>(<span class="params">data,pad</span>):</span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(data) == <span class="built_in">len</span>(pad)</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">bytes</span>(i^j <span class="keyword">for</span> i,j <span class="keyword">in</span> <span class="built_in">zip</span>(data,pad))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">connect</span>(<span class="params">data</span>):</span><br><span class="line">    Host, Port = <span class="string">b&#x27;crypto.challenge.bi0s.in&#x27;</span>, <span class="number">1337</span></span><br><span class="line">    io = remote(Host,Port)</span><br><span class="line">    <span class="comment"># io = process(&#x27;./server.py&#x27;)</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> data:</span><br><span class="line">        j = dumps(&#123;<span class="string">&quot;Name&quot;</span>: i[<span class="string">&quot;Name&quot;</span>], <span class="string">&quot;Vote&quot;</span>: i[<span class="string">&quot;Vote&quot;</span>], <span class="string">&quot;Sign&quot;</span>: i[<span class="string">&quot;Sign&quot;</span>]&#125;)</span><br><span class="line">        io.recvuntil(<span class="string">b&#x27;&gt; &#x27;</span>)</span><br><span class="line">        io.sendline(j)</span><br><span class="line">    <span class="comment"># io.interactive()</span></span><br><span class="line">    io.recvuntil(<span class="string">b&#x27;reward : &#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> io.recvline().strip()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">order = <span class="number">52435875175126190479447740508185965837690552500527637822603658699938581184513</span></span><br><span class="line">m1,m2 = [<span class="built_in">int</span>(sha256(i).hexdigest(),<span class="number">16</span>) <span class="keyword">for</span> i <span class="keyword">in</span> [<span class="string">b&quot;D&quot;</span>,<span class="string">b&quot;R&quot;</span>] ]</span><br><span class="line">idx,ny = [(i,j) <span class="keyword">for</span> i,j <span class="keyword">in</span> <span class="built_in">enumerate</span>(result) <span class="keyword">if</span> j[<span class="string">&quot;Name&quot;</span>] == <span class="string">&#x27;New York&#x27;</span> ][<span class="number">0</span>]</span><br><span class="line">ny[<span class="string">&quot;Sign&quot;</span>] = G2_to_signature( multiply( multiply( signature_to_G2( unhex(ny[<span class="string">&quot;Sign&quot;</span>]) ), invert(m1,order)), m2)).<span class="built_in">hex</span>()</span><br><span class="line">ny[<span class="string">&quot;Vote&quot;</span>] = <span class="string">&quot;R&quot;</span></span><br><span class="line"><span class="keyword">assert</span> bls.Verify(unhex(ny[<span class="string">&quot;PK&quot;</span>]) ,ny[<span class="string">&quot;Vote&quot;</span>].encode() ,unhex(ny[<span class="string">&quot;Sign&quot;</span>]) )</span><br><span class="line">result[idx] = ny</span><br><span class="line"></span><br><span class="line">xored_flag = unhex(connect(result).decode())</span><br><span class="line"></span><br><span class="line">fake_result = result[:]</span><br><span class="line">w = fake_result[idx+<span class="number">1</span>]</span><br><span class="line">ny = fake_result[idx]</span><br><span class="line">ny[<span class="string">&quot;Sign&quot;</span>] = G2_to_signature( add(signature_to_G2(unhex(ny[<span class="string">&quot;Sign&quot;</span>])), multiply(signature_to_G2(unhex(w[<span class="string">&quot;Sign&quot;</span>])), <span class="number">2</span>)  )).<span class="built_in">hex</span>()</span><br><span class="line">w[<span class="string">&quot;Sign&quot;</span>] = G2_to_signature( neg( signature_to_G2( unhex(w[<span class="string">&quot;Sign&quot;</span>]) ))).<span class="built_in">hex</span>()</span><br><span class="line"><span class="keyword">assert</span> bls.Verify(bls._AggregatePKs([unhex(ny[<span class="string">&quot;PK&quot;</span>]), unhex(w[<span class="string">&quot;PK&quot;</span>])]), <span class="string">b&#x27;R&#x27;</span>, bls.Aggregate([unhex(ny[<span class="string">&quot;Sign&quot;</span>]), unhex(w[<span class="string">&quot;Sign&quot;</span>])]))</span><br><span class="line">fake_result[idx]   = ny</span><br><span class="line">fake_result[idx+<span class="number">1</span>] = w </span><br><span class="line"></span><br><span class="line">fake_flag = connect(fake_result)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flag = bytexor(fake_flag,xored_flag)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> flag == <span class="string">b&#x27;inctf&#123;BLS_574nd5_f0r_B0n3h_Lynn_Sh4ch4m&#125;&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Flag"><a href="#Flag" class="headerlink" title="Flag"></a>Flag</h2><blockquote>
+<p>flag = b’inctf{BLS_574nd5_f0r_B0n3h_Lynn_Sh4ch4m}’</p>
+</blockquote>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/tags/">tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge-Description"><span class="toc-number">1.</span> <span class="toc-text">Challenge Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Handout"><span class="toc-number">2.</span> <span class="toc-text">Handout</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BLS-py"><span class="toc-number">2.1.</span> <span class="toc-text">BLS.py</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#signer-py"><span class="toc-number">2.2.</span> <span class="toc-text">signer.py</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#server-py"><span class="toc-number">2.3.</span> <span class="toc-text">server.py</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Observation"><span class="toc-number">3.</span> <span class="toc-text">Observation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BLS"><span class="toc-number">3.1.</span> <span class="toc-text">BLS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BLS-Signature-Aggregation"><span class="toc-number">3.2.</span> <span class="toc-text">BLS Signature Aggregation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Consensus-Attacks"><span class="toc-number">3.3.</span> <span class="toc-text">Consensus Attacks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploit-Idea"><span class="toc-number">4.</span> <span class="toc-text">Exploit Idea</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recovering-Fake-Flag"><span class="toc-number">4.1.</span> <span class="toc-text">Recovering Fake Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#In-detailed"><span class="toc-number">4.1.1.</span> <span class="toc-text">In detailed</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Recovering-Flag"><span class="toc-number">4.2.</span> <span class="toc-text">Recovering Flag</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#In-detailed-1"><span class="toc-number">4.2.1.</span> <span class="toc-text">In detailed</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploit"><span class="toc-number">5.</span> <span class="toc-text">Exploit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flag"><span class="toc-number">6.</span> <span class="toc-text">Flag</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&text=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&title=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&is_video=false&description=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Trouble With Pairs - InCTF Internationals 2021&body=Check out this article: http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&title=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&title=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&title=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&title=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&name=Trouble With Pairs - InCTF Internationals 2021&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2021/08/16/Trouble-With-Pairs-InCTF-Internationals-2021/&t=Trouble With Pairs - InCTF Internationals 2021"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2022
+    Chandu Kona
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/tags/">tags</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4V3049N925"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4V3049N925');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
