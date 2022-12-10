@@ -157,11 +157,11 @@
             
             <tag> writeup </tag>
             
-            <tag> EllipticCurve </tag>
+            <tag> dlp </tag>
             
             <tag> crypto </tag>
             
-            <tag> dlp </tag>
+            <tag> EllipticCurve </tag>
             
             <tag> BLS </tag>
             
@@ -190,11 +190,11 @@
             
             <tag> writeup </tag>
             
-            <tag> crypto </tag>
-            
             <tag> polynomial </tag>
             
             <tag> dlp </tag>
+            
+            <tag> crypto </tag>
             
         </tags>
       
@@ -221,11 +221,11 @@
             
             <tag> writeup </tag>
             
-            <tag> RSA </tag>
+            <tag> polynomial </tag>
             
             <tag> crypto </tag>
             
-            <tag> polynomial </tag>
+            <tag> RSA </tag>
             
         </tags>
       
@@ -252,11 +252,11 @@
             
             <tag> writeup </tag>
             
+            <tag> crypto </tag>
+            
             <tag> EllipticCurve </tag>
             
             <tag> RSA </tag>
-            
-            <tag> crypto </tag>
             
         </tags>
       
