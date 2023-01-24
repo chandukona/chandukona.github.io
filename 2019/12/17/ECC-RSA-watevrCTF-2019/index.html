@@ -14,7 +14,7 @@
 <meta property="og:description" content="Challenge Description1ECC + RSA &#x3D; Double security!  Attachment- ecc-rsa.py - ecc-rsa.txt  ecc-rsa.py123456789101112131415161718192021222324252627282930313233343536373839404142434445464748from fastecds">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2019-12-17T13:37:50.000Z">
-<meta property="article:modified_time" content="2022-12-09T01:29:38.991Z">
+<meta property="article:modified_time" content="2023-01-23T19:26:07.311Z">
 <meta property="article:author" content="Chandu Kona">
 <meta property="article:tag" content="writeup">
 <meta property="article:tag" content="crypto">
@@ -80,7 +80,7 @@
         <!--
        --><li><a href="/">Home</a></li><!--
      --><!--
-       --><li><a href="/about/">About</a></li><!--
+       --><li><a href="/images/resume.pdf">About</a></li><!--
      --><!--
        --><li><a href="/archives/">Writing</a></li><!--
      --><!--
@@ -181,7 +181,7 @@
 
 <h3 id="ecc-rsa-txt"><a href="#ecc-rsa-txt" class="headerlink" title="ecc-rsa.txt"></a>ecc-rsa.txt</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ECC Curve Prime: <span class="number">0x1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</span></span><br><span class="line">Curve a: -<span class="number">0x3</span></span><br><span class="line">Curve b: <span class="number">0x51953eb9618e1c9a1f929a21a0b68540eea2da725b99b315f3b8b489918ef109e156193951ec7e937b1652c0bd3bb1bf073573df883d2c34f1ef451fd46b503f00</span></span><br><span class="line">Gx: <span class="number">0xc6858e06b70404e9cd9e3ecb662395b4429c648139053fb521f828af606b4d3dbaa14b5e77efe75928fe1dc127a2ffa8de3348b3c1856a429bf97e7e31c2e5bd66</span></span><br><span class="line">Gy: <span class="number">0x11839296a789a3bc0045c8a5fb42c7d1bd998f54449579b446817afbd17273e662c97ee72995ef42640c550b9013fad0761353c7086a272c24088be94769fd16650</span></span><br><span class="line">e: <span class="number">0x10001</span></span><br><span class="line">p * q: <span class="number">0x1d61da34917e872315d41403c6a59911be97ba4673b0ff1e40201a7c7381845716d1e2f3906f226f649d663af7d9f68e0029629ff9bb07991db2bdff13adad242e9c4c06c6b5cf1ca5fa20eae64f1cdc2376651a4a7f7610e71257ce5da3cc8389c80797a2a9952bcd8c165d0dd5eef523ceb96748eb5aa66d0b4959dcef6a53dac5</span></span><br><span class="line">ciphertext: <span class="number">0x12fc466fa277837af8f20c59144d22e80fe4f9ab7371668487cdea44ff1677655d8628aacb688747c2bca111c3b34fa034b9915736fc614c3233bf6445d5ee90eac16a218770f296885bd997989f64a2e70324bba4171ad39759435b4f6d598952e6600eb663d5d9a210baa7134b1aa556aa56a092e7414127a1c35a3bbb1cbb455c</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="Observation"><a href="#Observation" class="headerlink" title="Observation"></a>Observation</h2><p>We can notice that the primes are generated using a custom function named <code>gen_rsa_primes</code>,<br>and that function just get a random point of the given elliptic curve and check if both<br>co-ordinates are primes, this maintain a relation between the primes and that relation is<br>the equation of curve.</p>
+<h2 id="Observation"><a href="#Observation" class="headerlink" title="Observation"></a>Observation</h2><p>We can notice that the primes are generated using a custom function named <code>gen_rsa_primes</code>,<br>and that function gets a random point of the given elliptic curve and checks if both<br>co-ordinates are primes and thus maintain a relationship between the primes, and that relation is<br>the equation of the curve.</p>
 <p>means: <code>y^2 = x^3 + a*x + b =&gt;=&gt; q^2 = p^3 + a*p + b</code></p>
 <h2 id="Exploit-Idea"><a href="#Exploit-Idea" class="headerlink" title="Exploit Idea"></a>Exploit Idea</h2><pre><code>- Recover primes using the relation
 - Decrypt the Ciphertext to get the Flag
@@ -210,7 +210,7 @@
          
           <li><a href="/">Home</a></li>
          
-          <li><a href="/about/">About</a></li>
+          <li><a href="/images/resume.pdf">About</a></li>
          
           <li><a href="/archives/">Writing</a></li>
          
@@ -256,7 +256,7 @@
     Copyright &copy;
     
     
-    2019-2022
+    2019-2023
     Chandu Kona
   </div>
   <div class="footer-right">
@@ -265,7 +265,7 @@
         <!--
        --><li><a href="/">Home</a></li><!--
      --><!--
-       --><li><a href="/about/">About</a></li><!--
+       --><li><a href="/images/resume.pdf">About</a></li><!--
      --><!--
        --><li><a href="/archives/">Writing</a></li><!--
      --><!--
